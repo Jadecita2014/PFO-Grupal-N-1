@@ -8,5 +8,49 @@
 <body>
     <h1>¡Hola, mundo!</h1>
     <p>Este es nuestro primer archivo HTML para la PFO Grupal N1</p>
+    <form id="loginForm">
+    <div>
+        <label for="username">Nombre de usuario:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">Iniciar Sesión</button>
+</form>
+<script>
+    // i) Documentación de la llamada
+    // Se realiza una llamada HTTP POST a 'backend-script.php' para enviar los datos del formulario.
+    // Parámetros enviados:
+    // - username: string con el nombre de usuario.
+    // - password: string con la contraseña.
+
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita que el formulario se envíe de la forma tradicional
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        fetch('backend-script.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Muestra la respuesta del backend
+            if (data.status === 'ok') {
+                alert('¡Inicio de sesión exitoso!');
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
 </body>
 </html>
